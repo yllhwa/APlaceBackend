@@ -1,7 +1,7 @@
 from flask import Flask, make_response, send_file
 from flask_socketio import SocketIO, emit
 from flask_redis import FlaskRedis
-from config import SECRET_KEY, REDIS_URL
+from config import SECRET_KEY, REDIS_URL, MAP_SIZE
 from PIL import Image
 import numpy as np
 import io
@@ -37,6 +37,8 @@ def draw(json):
     x = json['x']
     y = json['y']
     color = json['color']
+    if x < 0 or x >= MAP_SIZE['width'] or y < 0 or y >= MAP_SIZE['height']:
+        return
     set_bitmap(x, y, color)
     emit('draw_operation', json, broadcast=True)
 
